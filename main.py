@@ -77,17 +77,17 @@ def to_nparray(image):
 
 # # Example usage
 
-# base64_string = ""
-# with open("./ztest.json", "r") as image_data:
-#     data = json.load(image_data)
-#     base64_string = data["image"][0]
+base64_string = ""
+with open("./ztest2.json", "r") as image_data:
+    data = json.load(image_data)
+    base64_string = data["image"][0]
 
 
-# ss = encode_face(base64_string)
+ss = encode_face(base64_string)
 
 # encode = []
-# ss1 = encode_face("output_image.jpg")
-# print(ss)
+# ss = encode_face("face.png")
+print(ss)
 
 
 
