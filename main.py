@@ -1,3 +1,6 @@
+from io import BytesIO
+from PIL import Image
+import base64
 import json
 import face_recognition
 import numpy as np
@@ -6,6 +9,7 @@ import dlib
 import cv2
 from jaseci.jsorc.live_actions import jaseci_action
 
+
 @jaseci_action(act_group=["cv"], allow_remote=True)
 def encode_face(image):
     # initialize dlib's face detector (HOG-based) and the facial landmark predictor
@@ -13,7 +17,7 @@ def encode_face(image):
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor(p)
 
-    image = cv2.imread(image)
+    image = to_nparray(image)
 
     # Convert the image to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -29,7 +33,8 @@ def encode_face(image):
 
         # Extract the face ROI, encode it as a vector, and recognize the face
         (x, y, w, h) = face_utils.rect_to_bb(rect)
-        face_encodings = face_recognition.face_encodings(image, [(y, x + w, y + h, x)])
+        face_encodings = face_recognition.face_encodings(
+            image, [(y, x + w, y + h, x)])
         if len(face_encodings) == 0:
             continue
         face_encoding = face_encodings[0]
@@ -41,8 +46,9 @@ def encode_face(image):
 @jaseci_action(act_group=["cv"], allow_remote=True)
 def compare_face_encodings(face_encoding_list, id_list, face_encoding):
     face_encoding_list = np.array(face_encoding_list)
-    
-    face_distances = face_recognition.face_distance(face_encoding_list, face_encoding)
+
+    face_distances = face_recognition.face_distance(
+        face_encoding_list, face_encoding)
     if len(face_distances) > 0 and np.min(face_distances) < 0.6:
         match_index = np.argmin(face_distances)
         face_id = id_list[match_index]
@@ -50,14 +56,39 @@ def compare_face_encodings(face_encoding_list, id_list, face_encoding):
         return face_id
 
 
+# @jaseci_action(act_group=["cv"], allow_remote=True)
+def to_nparray(image):
+    is_base64 = False
+    try:
+        decoded_bytes = base64.b64decode(image)
+        is_base64 = True
+    except (base64.binascii.Error, TypeError):
+        is_base64 = False
 
-# ss = encode_face('database/Jolie/img1.jpeg')
-# ss2 = encode_face('database/Tharick/timg2.jpg')
+    if is_base64:
+        image_bytes = base64.b64decode(image)
+        image = Image.open(BytesIO(image_bytes))
+        np_array = np.array(image)
+        return np_array
+    else:
+        image = cv2.imread(image)
+        return image
 
-# q = []
-# q.append(ss)
-# w= ['jolie']
+
+# # Example usage
+
+# base64_string = ""
+# with open("./ztest.json", "r") as image_data:
+#     data = json.load(image_data)
+#     base64_string = data["image"][0]
 
 
-# we = compare_face_encodings(q,w,ss2)
-# print(we)
+# ss = encode_face(base64_string)
+
+# encode = []
+# ss1 = encode_face("output_image.jpg")
+# print(ss)
+
+
+
+# compare_face_encodings()

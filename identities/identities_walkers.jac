@@ -1,10 +1,10 @@
 walker vs_recognizer {
     has image_data;
     has anchor identity;
-
     can cv.encode_face, cv.compare_face_encodings;
     #the encode_face takes an image of a face and returns facial landmark / encoding of that face
     #the compare_face_encodings takes two encodings o f facial landmark data and returns a similarity factor
+
     face_encoding =  cv.encode_face(image_data);
     if (face_encoding == []){
         report:status = 400;
@@ -87,12 +87,6 @@ walker list_identities {
     identities{
         data['encodings']= -->.encodings;
         data['id']= -->.id;
-        // ww = -->.encodings;
-
-        // if (ww){
-        //     data['encodings']= ww;
-        //     data['id']= -->.id;
-        // }
         // report data;
     }
 }
