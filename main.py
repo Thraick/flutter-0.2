@@ -1,7 +1,7 @@
 from io import BytesIO
+import json
 from PIL import Image
 import base64
-import json
 import face_recognition
 import numpy as np
 from imutils import face_utils
@@ -13,17 +13,24 @@ from jaseci.jsorc.live_actions import jaseci_action
 @jaseci_action(act_group=["cv"], allow_remote=True)
 def encode_face(image):
     # initialize dlib's face detector (HOG-based) and the facial landmark predictor
-    p = "shape_predictor_68_face_landmarks.dat"
+    p = "shape_predictor_68_face_landmarks.dat"  # change
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor(p)
 
     image = to_nparray(image)
+    # print(face_encoding)
+    if isinstance(image, np.ndarray):
+        pass
+    else:
+        return None
 
     # Convert the image to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # Detect faces in the grayscale image
     rects = detector(gray, 0)
+    face_encoding = None
+    
 
     # Loop over the face detections
     for rect in rects:
@@ -39,8 +46,12 @@ def encode_face(image):
             continue
         face_encoding = face_encodings[0]
 
-    face_encoding = face_encoding.tolist()
-    return face_encoding
+    # print(face_encoding)
+    if isinstance(face_encoding, np.ndarray):
+        face_encoding = face_encoding.tolist()
+        return face_encoding
+    else:
+        return None
 
 
 @jaseci_action(act_group=["cv"], allow_remote=True)
@@ -72,23 +83,34 @@ def to_nparray(image):
         return np_array
     else:
         image = cv2.imread(image)
-        return image
+        if image:
+            return image
+        else: 
+            return None
+
+
+
+
 
 
 # # Example usage
 
-base64_string = ""
-with open("./ztest2.json", "r") as image_data:
-    data = json.load(image_data)
-    base64_string = data["image"][0]
+# base64_string = ""
+# with open("./ztest3.json", "r") as image_data:
+#     data = json.load(image_data)
+#     base64_string = data["image"][0]
+#     # print(base64_string)
 
 
-ss = encode_face(base64_string)
+# ss = encode_face(base64_string)
+# # ss = encode_face("tring")
 
-# encode = []
-# ss = encode_face("face.png")
-print(ss)
+# # # # encode = []
+# # ss = encode_face("1111.png")
+# # # ss = encode_face("face.png")
+# print(ss)
 
 
 
 # compare_face_encodings()
+

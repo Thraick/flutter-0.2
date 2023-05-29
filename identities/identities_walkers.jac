@@ -6,7 +6,7 @@ walker vs_recognizer {
     #the compare_face_encodings takes two encodings o f facial landmark data and returns a similarity factor
 
     face_encoding =  cv.encode_face(image_data);
-    if (face_encoding == []){
+    if (face_encoding == null){
         report:status = 400;
         report "No encoding found";
         disengage; 
