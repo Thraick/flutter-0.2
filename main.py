@@ -14,22 +14,26 @@ from jaseci.jsorc.live_actions import jaseci_action
 @jaseci_action(act_group=["cv"], allow_remote=True)
 def encode_face(image):
     # initialize dlib's face detector (HOG-based) and the facial landmark predictor
-    p = "shape_predictor_68_face_landmarks.dat"  # change
+    p = "shape_predictor_68_face_landmarks.dat" 
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor(p)
 
-    image = to_nparray(image)
-    # print(image)
-    # print(face_encoding)
+    # # image 
+    # image = cv2.imread(image)
+
+    # # base 64
+    image_bytes = base64.b64decode(image)
+    imag = Image.open(BytesIO(image_bytes))
+    imag = imag.rotate(270)
+    image = np.array(imag)
+
     if isinstance(image, np.ndarray):
         pass
     else:
         return None
     
     try:
-        print('try')
-
-    # Convert the image to grayscale
+        # Convert the image to grayscale
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
         # Detect faces in the grayscale image
@@ -51,12 +55,11 @@ def encode_face(image):
                 continue
             face_encoding = face_encodings[0]
 
-        print(face_encoding)
+        # print(face_encoding)
         if isinstance(face_encoding, np.ndarray):
             face_encoding = face_encoding.tolist()
             return face_encoding
         else:
-            print(' face enc none')
             return None
     except:
         print("error")
@@ -77,110 +80,141 @@ def compare_face_encodings(face_encoding_list, id_list, face_encoding):
 
 
 
-def to_nparray(image):
-    is_base64 = False
-    try:
-        decoded_bytes = base64.b64decode(image)
-        is_base64 = True
-    except (base64.binascii.Error, TypeError):
-        is_base64 = False
+# remove this
 
-    if is_base64:
-        print('base64')
-        image_bytes = base64.b64decode(image)
-        image = Image.open(BytesIO(image_bytes))
-        np_array = np.array(image)
-        return np_array
-    else:
-        print('image')
-        image = cv2.imread(image)
-        if isinstance(image, np.ndarray):
-            return image
-        else:
-            print('img none')
-            return None
+# def to_nparray(image):
+#     is_base64 = False
+#     try:
+#         decoded_bytes = base64.b64decode(image)
+#         is_base64 = True
+#     except (base64.binascii.Error, TypeError):
+#         is_base64 = False
+
+#     if is_base64:
+#         print('base64')
+#         image_bytes = base64.b64decode(image)
+#         image = Image.open(BytesIO(image_bytes))
+#         np_array = np.array(image)
+#         return np_array
+#     else:
+#         print('image')
+#         image = cv2.imread(image)
+#         if isinstance(image, np.ndarray):
+#             return image
+#         else:
+#             print('img none')
+#             return None
         
-        # return image
-        # if image:
-        #     return image
-        # else: 
-        #     return None
+#         # return image
+#         # if image:
+#         #     return image
+#         # else: 
+#         #     return None
 
 
-# # import base64
-# # import binascii
+# # # import base64
+# # # import binascii
 
-# # @jaseci_action(act_group=["cv"], allow_remote=True)
-# # def convert_octet_stream_to_base64(octet_stream):
-# #     base64_data = base64.b64encode(octet_stream).decode('utf-8')
-# #     return base64_data
+# # # @jaseci_action(act_group=["cv"], allow_remote=True)
+# # # def convert_octet_stream_to_base64(octet_stream):
+# # #     base64_data = base64.b64encode(octet_stream).decode('utf-8')
+# # #     return base64_data
 
 
 
-# # def convert_file_to_base64(file_path):
-# #     with open(file_path, 'rb') as file:
-# #         file_content = file.read()
-# #         base64_data = base64.b64encode(file_content).decode('utf-8')
-# #         # print(base64_data)
-# #         ss = encode_face(base64_data)
-# #         print(ss)
+# # # def convert_file_to_base64(file_path):
+# # #     with open(file_path, 'rb') as file:
+# # #         file_content = file.read()
+# # #         base64_data = base64.b64encode(file_content).decode('utf-8')
+# # #         # print(base64_data)
+# # #         ss = encode_face(base64_data)
+# # #         print(ss)
 
-# #         return base64_data
+# # #         return base64_data
     
-# # qq = convert_file_to_base64("./zz2.json")
+# # # qq = convert_file_to_base64("./zz2.json")
 
 
-# # with open("./zz2.json", "r") as image_data:
-# #     data = json.load(image_data)
+# # # with open("./zz2.json", "r") as image_data:
+# # #     data = json.load(image_data)
 
-# #     # data = "your_string"
-# #     encoded = binascii.b2a_base64(data.encode(), newline=False)
+# # #     # data = "your_string"
+# # #     encoded = binascii.b2a_base64(data.encode(), newline=False)
 
-# #     data = convert_octet_stream_to_base64(encoded)
-# #     print(data)
-# #     # print(encoded)
-# #     # base64_string = data["image"][0]
-# #     # print(base64_string)
-
-
-
-# # # Example usage
-
-base64_string = ""
-with open("./ztest6.json", "r") as image_data:
-# with open("./ztest3.json", "r") as image_data:
-# with open("./ztest7.json", "r") as image_data:
-    data = json.load(image_data)
-    base64_string = data["image"][0]
-    # print(base64_string)
+# # #     data = convert_octet_stream_to_base64(encoded)
+# # #     print(data)
+# # #     # print(encoded)
+# # #     # base64_string = data["image"][0]
+# # #     # print(base64_string)
 
 
-# # ss = to_nparray(base64_string)
-ss = encode_face(base64_string)
-# ss = encode_face("mine.jpeg")
-# ss = encode_face("war.jpeg")
-# ss = encode_face("my.jpg") none
-# ss = encode_face("new.png")
-# ss = encode_face("bar.jpeg")
-# ss = encode_face("far.jpeg")
-# ss = encode_face("face.png")
-print(ss)
 
-# # # # encode = []
-# ss = encode_face("my.jpg")
+# # # # Example usage
+
+# # base64_string = ""
+# # with open("./ztest3.json", "r") as image_data:
+# # # with open("./ztest6.json", "r") as image_data:
+# # # with open("./ztest3.json", "r") as image_data:
+# # with open("./ztest7.json", "r") as image_data:
+#     # data = json.load(image_data)
+#     # base64_string = data["image"][0]
+#     # print(base64_string)
+#     # # base64_string = base64.b64decode(base64_string)
+#     # image_data = base64.b64decode(base64_string)
+
+#     # image = Image.open(BytesIO(image_data))
+
+#     # image = image.rotate(270)
+#     # base64_string = np.array(image)
+
+#     # Display the image
+#     # image.show()
+
+
+
+# # sss = to_nparray(base64_string)
+# # ss = encode_face(base64_string)
+# # print(ss)
+
+
+# # ss = encode_face("mine.jpeg")
+# # ss = encode_face("war.jpeg")
+# # ss = encode_face("my.jpg") none
+# # ss = encode_face("new.png")
+# # ss = encode_face("bar.jpeg")
+# # ss = encode_face("now.jpeg")
+# # # ss = encode_face("far.jpeg")
 # # # ss = encode_face("face.png")
-# print(ss)
+# # print(ss)
 
 
 
-# # compare_face_encodings()
 
-# # import magic
+# # image = cv2.imread('now.jpeg')
+
+# # # Convert the image to base64
+# # _, encoded_image = cv2.imencode('.jpeg', image)
+# # base64_image = base64.b64encode(encoded_image)
+# # print(base64_image)
+# # ss = encode_face(base64_image)
+# # print(ss)
 
 
-# # file_path = "/zz2.octet-stream"  # Replace with the path to your file
+# # # # # encode = []
+# # ss = encode_face("my.jpg")
+# # # # ss = encode_face("face.png")
+# # print(ss)
 
 
-# # file_type = magic.from_file(file_path, mime=True)
 
-# # print("File type:", file_type)
+# # # compare_face_encodings()
+
+# # # import magic
+
+
+# # # file_path = "/zz2.octet-stream"  # Replace with the path to your file
+
+
+# # # file_type = magic.from_file(file_path, mime=True)
+
+# # # print("File type:", file_type)

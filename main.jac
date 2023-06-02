@@ -13,38 +13,42 @@ walker init {
 walker interact: anyone {
     has image_data;
     has expression;
-    // if (image_data){
-    //     id = spawn net.root() walker::vs_recognizer(image_data=image_data);
-    // }
 
-    // expression_list = ["HAPPY","SAD","ANGRY","SUPRISE","FEAR","DISGUST"];
+    expression_list = {
+        "HAPPY": ['0 smile'],
+        "SAD":['1 sad'],
+        "ANGRY":[],
+        "SUPRISE":[],
+        "FEAR":[],
+        "DISGUST":[]
+    };
+
+    for exp in expression_list{
+        if(expression in expression_list[exp]){
+            expression = exp;
+        }
+    }
 
     // if(expression and expression not in expression_list){
     //     report:custom = {"ERROR": "Expression '"+expression+"'is not in " + expression_list.str};
     //     report:status = 404;
     // }
-    // else: report expression;
 
     ss = spawn net.root() walker::vs_recognizer(image_data = image_data);
-
-    // std.out('ooooooooooooooooooooooooooooooooooooooooooo');
-    std.out(image_data);
-    std.out(expression);
-
-    report ss;
+    report {"user": ss, "expression": expression};
 }
 
-walker inter {
-    can file.load_json;
-    has path = "";
+// walker inter {
+//     can file.load_json;
+//     has path = "";
 
-    ww = file.load_json(path);
-    std.out(ww['image'][0]);
+//     ww = file.load_json(path);
+//     std.out(ww['image'][0]);
 
-    ss = spawn net.root() walker::vs_recognizer(image_data = ww['image'][0]);
-    // std.out('ooooooooooooooooooooooooooooooooooooooooooo');
-    // std.out(ss);
-}
+//     ss = spawn net.root() walker::vs_recognizer(image_data = ww['image'][0]);
+//     // std.out('ooooooooooooooooooooooooooooooooooooooooooo');
+//     // std.out(ss);
+// }
 
 
 /*
@@ -86,7 +90,7 @@ walker run interact -ctx  "{\"image_data\" : \"database/Tharick/timg2.jpg\", \"e
 
 walker run get_webhook_url -ctx  "{\"token\" : \"b303f4f3a15e652ba6167161b071b8cb5cb2289c352992cd8f17708abadae59b\", \"url\" : \"http://0.0.0.0:8002\", \"proxy_url\" : \"https://8971-190-93-37-93.ngrok-free.app\", \"name\": \"interact\"}"
 
-walker run get_webhook_url -ctx  "{\"token\" : \"70c78e859cc1bd1b2a8c270b3ccbceadd8db2c313c0788232ceae52a3e4e9430\", \"url\" : \"http://0.0.0.0:8002\", \"proxy_url\" : \"https://e0da-190-93-37-93.ngrok-free.app\", \"name\": \"interact\"}"
+walker run get_webhook_url -ctx  "{\"token\" : \"ffda7e86584249938a899c7c9b2129739f2ce66eed3a41e6249b5f9d52243375\", \"url\" : \"http://0.0.0.0:8002\", \"proxy_url\" : \"https://0770-190-93-37-131.ngrok-free.app\", \"name\": \"interact\"}"
 
 */
 

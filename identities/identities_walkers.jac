@@ -2,12 +2,10 @@ walker vs_recognizer {
     has image_data;
     has anchor identity;
     can cv.encode_face, cv.compare_face_encodings;
-    #the encode_face takes an image of a face and returns facial landmark / encoding of that face
-    #the compare_face_encodings takes two encodings o f facial landmark data and returns a similarity factor
+
     if (image_data){
         face_encoding =  cv.encode_face(image_data);
         if (face_encoding == null){
-            // report:status = 400;
             report "No encoding found";
             disengage; 
         }
@@ -28,7 +26,6 @@ walker vs_recognizer {
         }
     }
     else{
-        // report:status = 400;
         report "Invalid value";
         disengage; 
     }
