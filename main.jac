@@ -13,7 +13,6 @@ walker init {
 walker interact: anyone {
     has image_data;
     has expression;
-    
     // if (image_data){
     //     id = spawn net.root() walker::vs_recognizer(image_data=image_data);
     // }
@@ -25,9 +24,10 @@ walker interact: anyone {
     //     report:status = 404;
     // }
     // else: report expression;
+
     ss = spawn net.root() walker::vs_recognizer(image_data = image_data);
 
-    std.out('ooooooooooooooooooooooooooooooooooooooooooo');
+    // std.out('ooooooooooooooooooooooooooooooooooooooooooo');
     std.out(image_data);
     std.out(expression);
 
@@ -39,8 +39,7 @@ walker inter {
     has path = "";
 
     ww = file.load_json(path);
-    // ww = file.load_json('ztest.json');
-    // std.out(ww['image'][0]);
+    std.out(ww['image'][0]);
 
     ss = spawn net.root() walker::vs_recognizer(image_data = ww['image'][0]);
     // std.out('ooooooooooooooooooooooooooooooooooooooooooo');
@@ -50,6 +49,8 @@ walker inter {
 
 /*
 
+actions load local main.py
+actions load local ztest.py
 
 jac build main.jac
 sentinel set -snt active:sentinel -mode ir main.jir
@@ -66,14 +67,15 @@ walker run init
 
 
 actions load local main.py
-// actions load local test.py
+actions load local ztest.py
 actions load local webhook/webhook_actions.py
 jac build main.jac
 sentinel register -set_active true -mode ir main.jir
 
 
 
-walker run inter -ctx  "{\"path\" : \"ztest3.json\"}"
+walker run inter -ctx  "{\"path\" : \"ztest7.json\"}"
+walker run inter -ctx  "{\"path\" : \"ztest6.json\"}"
 
 
 walker run vs_recognizer -ctx  "{\"image_data\" : \"database/Jolie/img1.jpeg\"}"
@@ -84,7 +86,7 @@ walker run interact -ctx  "{\"image_data\" : \"database/Tharick/timg2.jpg\", \"e
 
 walker run get_webhook_url -ctx  "{\"token\" : \"b303f4f3a15e652ba6167161b071b8cb5cb2289c352992cd8f17708abadae59b\", \"url\" : \"http://0.0.0.0:8002\", \"proxy_url\" : \"https://8971-190-93-37-93.ngrok-free.app\", \"name\": \"interact\"}"
 
-walker run get_webhook_url -ctx  "{\"token\" : \"2ef828b2935f311fdec9d6b1bed469e467dbf6b2b7538b63ee8f5320c8a47848\", \"url\" : \"http://0.0.0.0:8002\", \"proxy_url\" : \"https://0ece-190-93-37-191.ngrok-free.app\", \"name\": \"interact\"}"
+walker run get_webhook_url -ctx  "{\"token\" : \"70c78e859cc1bd1b2a8c270b3ccbceadd8db2c313c0788232ceae52a3e4e9430\", \"url\" : \"http://0.0.0.0:8002\", \"proxy_url\" : \"https://e0da-190-93-37-93.ngrok-free.app\", \"name\": \"interact\"}"
 
 */
 

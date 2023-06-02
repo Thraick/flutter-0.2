@@ -4,27 +4,33 @@ walker vs_recognizer {
     can cv.encode_face, cv.compare_face_encodings;
     #the encode_face takes an image of a face and returns facial landmark / encoding of that face
     #the compare_face_encodings takes two encodings o f facial landmark data and returns a similarity factor
-
-    face_encoding =  cv.encode_face(image_data);
-    if (face_encoding == null){
-        report:status = 400;
-        report "No encoding found";
-        disengage; 
+    if (image_data){
+        face_encoding =  cv.encode_face(image_data);
+        if (face_encoding == null){
+            // report:status = 400;
+            report "No encoding found";
+            disengage; 
+        }
+        else {
+            identities = spawn net.root() walker::list_identities;
+            if (!identities['encodings']){
+                std.out("create1");
+                identity = spawn net.root() walker::create_identity(encodings = face_encoding);
+            }else{
+                std.out("compare");
+                identity = cv.compare_face_encodings(identities['encodings'], identities['id'], face_encoding);
+            }
+            if (!identity){
+                std.out("create2");
+                identity = spawn net.root() walker::create_identity(encodings = face_encoding);
+            }
+            report identity;
+        }
     }
-    else {
-        identities = spawn net.root() walker::list_identities;
-        if (!identities['encodings']){
-            std.out("create1");
-            identity = spawn net.root() walker::create_identity(encodings = face_encoding);
-        }else{
-            std.out("compare");
-            identity = cv.compare_face_encodings(identities['encodings'], identities['id'], face_encoding);
-        }
-        if (!identity){
-            std.out("create2");
-            identity = spawn net.root() walker::create_identity(encodings = face_encoding);
-        }
-        report identity;
+    else{
+        // report:status = 400;
+        report "Invalid value";
+        disengage; 
     }
 }
 

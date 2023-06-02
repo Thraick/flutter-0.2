@@ -12,4 +12,4 @@ walker get_webhook_url {
     report _url;
 }
 
-// walker run get_webhook_url -ctx  "{\"token\" : \"b303f4f3a15e652ba6167161b071b8cb5cb2289c352992cd8f17708abadae59b\", \"url\" : \"http://0.0.0.0:8002\", \"proxy_url\" : \"https://f1d5-190-93-37-91.ngrok-free.app\", \"name\": \"interact\"}"
+// walker run get_webhook_url -ctx  "{\"token\" : \"95613b486641cf02ca1fd4aa94c8d5955f4d1a51afa9ff30ed7372ed740c8ade\", \"url\" : \"http://0.0.0.0:8002\", \"proxy_url\" : \"https://aef2-190-93-37-86.ngrok-free.app\", \"name\": \"interact\"}"
